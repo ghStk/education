@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ghstk.eduservice.mapper.EduCourseMapper">
+
+    <!-- 发布前确认信息 -->
+    <select id="getCoursePublish" resultType="com.ghstk.eduservice.entity.vo.CoursePublishVo">
+		SELECT
+			ec.id,
+			ec.title,
+			ec.price,
+			ec.cover,
+			ec.lesson_num,
+			et.`name` 'teacherName',
+			es1.title 'subjectLv1',
+			es2.title 'subjectLv2'
+		FROM
+			edu_course ec
+			LEFT OUTER JOIN edu_teacher et ON ec.teacher_id = et.id
+			LEFT OUTER JOIN edu_subject es1 ON ec.subject_parent_id = es1.id
+			LEFT OUTER JOIN edu_subject es2 ON ec.subject_id = es2.id
+		WHERE
+			ec.id = #{courseId}
+    </select>
+
+    <!-- 前台课程细节信息 -->
+    <select id="getCourseFront" resultType="com.ghstk.eduservice.entity.frontvo.FrontCourseQuery">
+		SELECT
+			ec.id,
+			ec.title,
+			ec.price,
+			ec.cover,
+			ec.buy_count,
+			ec.view_count,
+			ec.lesson_num,
+			ed.description,
+			et.`id` 'teacherId',
+			et.`name` 'teacherName',
+			et.`intro`,
+			et.`avatar`,
+			es1.`id` 'subjectLevelOneId',
+			es1.title 'subjectLevelOne',
+			es2.`id` 'subjectLevelTwoId',
+			es2.title 'subjectLevelTwo'
+		FROM
+			edu_course ec
+			LEFT OUTER JOIN edu_course_description ed ON ec.id = ed.id
+			LEFT OUTER JOIN edu_teacher et ON ec.teacher_id = et.id
+			LEFT OUTER JOIN edu_subject es1 ON ec.subject_parent_id = es1.id
+			LEFT OUTER JOIN edu_subject es2 ON ec.subject_id = es2.id
+		WHERE
+			ec.id = #{courseId}
+    </select>
+
+</mapper>
